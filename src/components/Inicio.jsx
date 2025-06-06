@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const Inicio = () => {
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -41,7 +41,7 @@ const Inicio = () => {
           content_type: file.type
         })
       });
-
+      console.log("Response:", response);
       if (!response.ok) {
         throw new Error("No se pudo generar la URL de subida.");
       }
@@ -82,7 +82,7 @@ const Inicio = () => {
       >
         <div className='flex flex-col items-center justify-center h-full gap-8'>
           <h1 className='text-3xl font-bold text-center my-10'>
-            <span className='text-blue-500'>Accessa</span> - Automatización de Reportes
+            <span className='text-blue-500'>Accessa</span> - Automatización de Reportesv2
           </h1>
 
           <form
