@@ -41,7 +41,7 @@ const Inicio = () => {
           content_type: file.type
         })
       });
-      console.log("Response:", response);
+      console.log("Response:", response.json());
       if (!response.ok) {
         throw new Error("No se pudo generar la URL de subida.");
       }
