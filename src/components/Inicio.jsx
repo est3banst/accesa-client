@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 const Inicio = () => {
-  const [files, setFiles] = useState({});
+  const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -40,8 +40,8 @@ const Inicio = () => {
           file_name: file.name,
           content_type: file.type
         })
-      });
-      console.log("Response:", response.json());
+      })
+      
       if (!response.ok) {
         throw new Error("No se pudo generar la URL de subida.");
       }
