@@ -27,6 +27,11 @@
   transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
   border-radius: 4px;
 }
+.label-styled {
+  padding: .6rem 1rem;
+  border: .5px solid #343434;
+  border-radius: 6px;
+}
 button[type="submit"] {
   padding: .5rem 1rem;
 }

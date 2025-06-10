@@ -17,6 +17,9 @@ dependencies:
   tailwindcss:
     specifier: ^4.1.8
     version: 4.1.8
+  uuid:
+    specifier: ^11.1.0
+    version: 11.1.0
 
 devDependencies:
   '@eslint/js':
@@ -1654,6 +1657,11 @@ packages:
     dependencies:
       punycode: 2.3.1
     dev: true
+
+  /uuid@11.1.0:
+    resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
+    hasBin: true
+    dev: false
 
   /vite@6.3.5:
     resolution: {integrity: sha512-cZn6NDFE7wdTpINgs++ZJ4N49W2vRp8LCKrn3Ob1kYNtOo21vfDoaV5GzBfLU4MovSAB8uNRm4jgzVQZ+mBzPQ==}

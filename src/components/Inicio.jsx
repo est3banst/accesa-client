@@ -1,23 +1,42 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 const Inicio = () => {
+  const inputRef = useRef(null);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleDelete = (index) => { 
-   setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  const handleDelete = (id) => { 
+    console.log("Eliminando archivo:", id);
+   setFiles((prevFiles) => prevFiles.filter((f, i) => f.id !== id));
+   setError(null);
+  
   }
 
-  const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    if (selectedFiles.length > 10) {
-      setError("Solo puedes subir hasta 10 archivos.");
-      return;
-    }
-    setFiles(selectedFiles);
-    setError(null);
-  };
+ const handleFileChange = (e) => {
+  const selectedFiles = Array.from(e.target.files);
+  console.log("Archivo: ",e.target.files);
+  if (selectedFiles.length + files.length > 10) {
+    setError("Solo puedes subir hasta 10 archivos.");
+    e.target.value = ''; 
+    return;
+  }
+
+  const existingFileNames = files.map(f => f.file.name);
+  const newFiles = selectedFiles
+    .filter(f => !existingFileNames.includes(f.name))
+    .map(f => ({ id: uuidv4(), file: f }));
+    // console.log("Nuevos archivos:", newFiles);
+
+  setFiles(prevFiles => [...prevFiles, ...newFiles]);
+  setError(null);
+
+  if (inputRef.current) {
+    inputRef.current.value = '';
+  }
+};
+
 
  const handleSubmit = async (e) => {
   e.preventDefault();
@@ -30,7 +49,8 @@ const Inicio = () => {
   setError(null);
 
   try {
-    for (const file of files) {
+    for (const fileObj of files) {
+      const file = fileObj.file;
       const response = await fetch("https://gcs-flask-backend-811925332379.southamerica-east1.run.app/generate-signed-url", {
         method: "POST",
         headers: {
@@ -41,7 +61,7 @@ const Inicio = () => {
           content_type: file.type
         })
       })
-      
+      console.log(file_name, file.type);
       if (!response.ok) {
         throw new Error("No se pudo generar la URL de subida.");
       }
@@ -64,6 +84,7 @@ const Inicio = () => {
     }
 
     alert("¡Archivos subidos exitosamente!");
+    location.reload()
   } catch (err) {
     setError(err.message);
   } finally {
@@ -82,7 +103,7 @@ const Inicio = () => {
       >
         <div className='flex flex-col items-center justify-center h-full gap-8'>
           <h1 className='text-3xl font-bold text-center my-10'>
-            <span className='text-blue-500'>Accessa</span> - Automatización de Reportesv2
+            <span className='text-blue-500'>Accessa</span> - Automatización de Reportesv3
           </h1>
 
           <form
@@ -91,34 +112,45 @@ const Inicio = () => {
             encType="multipart/form-data"
           >
             <div className='flex items-center gap-2'>
-              <label htmlFor="file">Elegir archivos</label>
+               <label
+    htmlFor="file"
+    className="label-styled flex items-center gap-2 cursor-pointer rounded-xs hover:bg-blue-300"
+  >
+    Seleccionar archivos
+    <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 16 16">
+	<path fill="currentColor" d="M12.6 5H12c0-.2-.2-.6-.4-.8s-.6-.4-1.1-.4c-.2 0-.4 0-.6.1c-.1-.2-.2-.3-.3-.5c-.2-.2-.5-.4-1.1-.4c-.2 0-.4 0-.5.1V1.4C8 .8 7.6 0 6.6 0c-.4 0-.8.2-1.1.4C5 1 5 1.8 5 1.8v4.3c-.6.1-1.1.3-1.4.6C3 7.4 3 8.3 3 9.5v.7c0 1.4.7 2.1 1.4 2.8l.3.4C6 14.6 7.1 15 9.8 15c2.9 0 4.2-1.6 4.2-5.1V7.4c0-.7-.2-2.1-1.4-2.4m.4 2.4V10c0 3.4-1.3 4.1-3.2 4.1c-2.4 0-3.3-.3-4.3-1.3l-.4-.4c-.7-.8-1.1-1.2-1.1-2.2v-.7c0-1 0-1.7.3-2.1c.1-.1.4-.2.7-.2v.5l-.3 1.5c0 .1 0 .1.1.2s.2 0 .2 0l1-1.2V1.8c0-.1 0-.5.2-.7c.1 0 .2-.1.4-.1c.3 0 .4.3.4.4v4.3c0 .3.2.6.5.6S8 6 8 5.8V4.5c0-.1.1-.5.5-.5c.3 0 .5.1.5.4v1.3c0 .3.2.6.5.6s.5-.3.5-.5v-.7c0-.1.1-.3.5-.3c.2 0 .3.1.3.1c.2.1.2.4.2.4v.8c0 .3.2.5.4.5c.3 0 .5-.1.5-.4c0-.1.1-.2.2-.3h.2c.6.2.7 1.2.7 1.5q0-.15 0 0"></path>
+</svg>
+  </label>
               <input
-                className='border rounded-xs border-blue-200 max-w-64'
+                className='hidden'
                 id='file'
                 type="file"
                 name="files"
                 multiple
+                ref={inputRef}
                 onChange={handleFileChange}
+                
               />
              
              
             </div>
              {files.length > 0 && (
-                <ul className='mt-2 text-left'>
-                  {files.map((file, index) => (
-                    <li key={index} className='flex items-center gap-2 text-gray-700'>
-                      <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
+  <ul className='mt-2 text-left'>
+    {files.map((fileObj) => (
+      <li key={fileObj.id} className='flex items-center gap-2 text-gray-700'>
+        <svg xmlns="http://www.w3.org/2000/svg" width={24} height={24} viewBox="0 0 24 24">
 	<path fill="currentColor" d="M14 11a3 3 0 0 1-3-3V4H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-8zm-2-3a2 2 0 0 0 2 2h3.59L12 4.41zM7 3h5l7 7v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3"></path>
-</svg> {file.name}
-<button onClick={() => handleDelete(index)} className='flex items-center cursor-pointer'>
-    <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24">
+</svg>
+        {fileObj.file.name}
+        <button onClick={() => handleDelete(fileObj.id)} className='flex items-center cursor-pointer'>
+           <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24">
 	<path fill="#ff221899" d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12z"></path>
 </svg>
-</button>
-                    </li>
-                  ))}
-                </ul>
-              )}
+        </button>
+      </li>
+    ))}
+  </ul>
+)}
              <small className='text-gray-600'>Selecciona hasta 10 archivos</small>
             {error && <p className='text-red-500'>{error}</p>}
             <button
