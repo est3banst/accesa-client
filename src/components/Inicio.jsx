@@ -31,27 +31,28 @@ const Inicio = () => {
 
   setFiles(prevFiles => [...prevFiles, ...newFiles]);
   setError(null);
-
+console.log("Archivos actuales:", files);
   if (inputRef.current) {
     inputRef.current.value = '';
   }
 };
 
-
+const CLOUD_RUN = "https://gcs-flask-backend-811925332379.southamerica-east1.run.app/generate-signed-url";
+const LOCAL = "http://localhost:8081/generate-signed-url";
  const handleSubmit = async (e) => {
   e.preventDefault();
   if (files.length === 0) {
     setError("Por favor selecciona al menos un archivo.");
     return;
   }
-
   setLoading(true);
   setError(null);
-
+  console.log("Subiendo archivos:", files);
   try {
     for (const fileObj of files) {
       const file = fileObj.file;
-      const response = await fetch("https://gcs-flask-backend-811925332379.southamerica-east1.run.app/generate-signed-url", {
+      console.log(file);
+      const response = await fetch(CLOUD_RUN, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
