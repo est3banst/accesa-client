@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 const Inicio = () => {
@@ -13,6 +13,7 @@ const Inicio = () => {
    setError(null);
   
   }
+useEffect(() => { console.log("Archivos actuales:", files); }, [files]);
 
  const handleFileChange = (e) => {
   const selectedFiles = Array.from(e.target.files);
