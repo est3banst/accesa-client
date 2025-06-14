@@ -15,28 +15,29 @@ const Inicio = () => {
   }
 useEffect(() => { console.log("Archivos actuales:", files); }, [files]);
 
- const handleFileChange = (e) => {
+const handleFileChange = (e) => {
   const selectedFiles = Array.from(e.target.files);
-  console.log("Archivo: ",e.target.files);
   if (selectedFiles.length + files.length > 10) {
     setError("Solo puedes subir hasta 10 archivos.");
-    e.target.value = ''; 
+    e.target.value = '';
     return;
   }
 
-  const existingFileNames = files.map(f => f.file.name);
-  const newFiles = selectedFiles
-    .filter(f => !existingFileNames.includes(f.name))
-    .map(f => ({ id: uuidv4(), file: f }));
-    // console.log("Nuevos archivos:", newFiles);
+  setFiles(prevFiles => {
+    const existingFileNames = prevFiles.map(f => f.file.name);
+    const newFiles = selectedFiles
+      .filter(f => !existingFileNames.includes(f.name))
+      .map(f => ({ id: uuidv4(), file: f }));
 
-  setFiles(prevFiles => [...prevFiles, ...newFiles]);
+    return [...prevFiles, ...newFiles];
+  });
+
   setError(null);
-console.log("Archivos actuales:", files);
   if (inputRef.current) {
     inputRef.current.value = '';
   }
 };
+
 
 const CLOUD_RUN = "https://gcs-flask-backend-811925332379.southamerica-east1.run.app/generate-signed-url";
 const LOCAL = "http://localhost:8081/generate-signed-url";
@@ -63,7 +64,7 @@ const LOCAL = "http://localhost:8081/generate-signed-url";
           content_type: file.type
         })
       })
-      console.log(file_name, file.type);
+      console.log(file.name, file.type);
       if (!response.ok) {
         throw new Error("No se pudo generar la URL de subida.");
       }
