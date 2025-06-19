@@ -70,7 +70,7 @@ const Inicio = () => {
       for (const fileObj of files) {
         const file = fileObj.file;
         console.log(file);
-        const response = await fetch(`${CLOUD_RUN}'generate-signed-url'`, {
+        const response = await fetch(`${CLOUD_RUN}generate-signed-url`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
