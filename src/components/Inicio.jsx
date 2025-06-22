@@ -4,8 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 const Inicio = () => {
   const inputRef = useRef(null);
   const [files, setFiles] = useState([]);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -50,19 +49,14 @@ const Inicio = () => {
       setError("Por favor selecciona al menos un archivo.");
       return;
     }
-    if (!startDate || !endDate) {
-      setError("Debes seleccionar un rango de fechas.");
+    if (!selectedMonth) {
+      setError("Debes seleccionar un mes.");
       return;
     }
 
-    const start = new Date(startDate);
-    const end = new Date(endDate);
-    const diffDays = (end - start) / (1000 * 60 * 60 * 24);
+    const currentYear = new Date().getFullYear();
+    const reportMonth = `${currentYear}-${selectedMonth}`;
 
-    if (diffDays < 2) {
-      setError("El rango de fechas debe ser de al menos 2 días.");
-      return;
-    }
     setLoading(true);
     setError(null);
     console.log("Subiendo archivos:", files);
@@ -107,9 +101,9 @@ const Inicio = () => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          start_date: startDate,
-          end_date: endDate
+          month: reportMonth,
         })
+
       });
 
       if (!reportResponse.ok) {
@@ -168,29 +162,31 @@ const Inicio = () => {
                 onChange={handleFileChange}
 
               />
-
-
             </div>
-            <div className='flex gap-4'>
-              <div className='flex flex-col'>
-                <label className='text-sm text-gray-700'>Desde</label>
-                <input
-                  type="date"
-                  className="border px-2 py-1 rounded-md"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                />
-              </div>
-              <div className='flex flex-col'>
-                <label className='text-sm text-gray-700'>Hasta</label>
-                <input
-                  type="date"
-                  className="border px-2 py-1 rounded-md"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                />
-              </div>
+            <div className="flex flex-col items-start">
+              <label htmlFor="month" className="text-sm text-gray-700 mb-1">Selecciona el mes</label>
+              <select
+                id="month"
+                className="border px-2 py-1 rounded-md"
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+              >
+                <option value="">-- Selecciona un mes --</option>
+                <option value="01">Enero</option>
+                <option value="02">Febrero</option>
+                <option value="03">Marzo</option>
+                <option value="04">Abril</option>
+                <option value="05">Mayo</option>
+                <option value="06">Junio</option>
+                <option value="07">Julio</option>
+                <option value="08">Agosto</option>
+                <option value="09">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+              </select>
             </div>
+
 
             {files.length > 0 && (
               <ul className='mt-2 text-left'>
