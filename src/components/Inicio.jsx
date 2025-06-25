@@ -135,7 +135,7 @@ const Inicio = () => {
       >
         <div className='flex flex-col items-center justify-center h-full gap-8'>
           <h1 className='text-3xl font-bold text-center my-10'>
-            <span className='text-blue-500'>Acessa</span> - Automatización de Reportesv3
+            <span className='text-blue-500'>Accesa</span> - Automatización de Reportes
           </h1>
 
           <form
