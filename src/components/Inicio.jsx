@@ -7,6 +7,8 @@ const Inicio = () => {
   const [selectedMonth, setSelectedMonth] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [reportUrl, setReportUrl] = useState(null);
+
 
   const handleDelete = (id) => {
     console.log("Eliminando archivo:", id);
@@ -111,9 +113,8 @@ const Inicio = () => {
       }
 
       const reportData = await reportResponse.json();
-      window.open(reportData.download_url, "_blank");
+      setReportUrl(reportData.download_url);
 
-      alert("¡Archivos subidos exitosamente!");
       // location.reload()
 
     } catch (err) {
@@ -226,6 +227,41 @@ const Inicio = () => {
               </svg>
             </button>
           </form>
+          {loading && (
+  <div className="mt-4 flex items-center gap-2 text-blue-600">
+    <svg
+      className="animate-spin h-5 w-5 text-blue-600"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      ></circle>
+      <path
+        className="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8v8H4z"
+      ></path>
+    </svg>
+    Generando reporte...
+  </div>
+)}
+          {reportUrl && !loading && (
+  <a
+    href={reportUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
+  >
+    Descargar Reporte
+  </a>
+)}
         </div>
       </main>
     </>
