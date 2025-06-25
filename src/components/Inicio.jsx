@@ -135,7 +135,7 @@ const Inicio = () => {
       >
         <div className='flex flex-col items-center justify-center h-full gap-8'>
           <h1 className='text-3xl font-bold text-center my-10'>
-            <span className='text-blue-500'>Accessa</span> - Automatización de Reportesv3
+            <span className='text-blue-500'>Acessa</span> - Automatización de Reportesv3
           </h1>
 
           <form
@@ -209,7 +209,7 @@ const Inicio = () => {
             <small className='text-gray-600'>Selecciona hasta 10 archivos</small>
             {error && <p className='text-red-500'>{error}</p>}
             <button
-              className='cursor-pointer border flex items-center gap-2 rounded-md bg-blue-400 px-4 py-2'
+              className={`${loading ? 'bg-blue-200' : ''} cursor-pointer border flex items-center gap-2 rounded-md bg-blue-400 px-4 py-2`}
               type="submit"
               disabled={loading}
             >
@@ -257,7 +257,7 @@ const Inicio = () => {
     href={reportUrl}
     target="_blank"
     rel="noopener noreferrer"
-    className="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
+    className="mt-4 inline-block p-4 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
   >
     Descargar Reporte
   </a>
