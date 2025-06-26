@@ -97,6 +97,7 @@ const Inicio = () => {
           throw new Error(`Error al subir el archivo ${file.name}`);
         }
       }
+      await new Promise(resolve => setTimeout(resolve, 6000));
       const reportResponse = await fetch(`${CLOUD_RUN}generate-report`, {
         method: "POST",
         headers: {
